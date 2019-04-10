@@ -24,6 +24,7 @@ import cats.implicits._
 import scalaj.http._
 import cats.Id
 import github4s.jvm.ImplicitsJVM
+import github4s.utils.Integration
 
 class ApiSpec
     extends FlatSpec
@@ -331,7 +332,7 @@ class ApiSpec
     response should be('left)
   }
 
-  "Repos >> CreateRelease" should "return the created release" in {
+  "Repos >> CreateRelease" should "return the created release" taggedAs Integration in {
     val response =
       repos.createRelease(
         accessToken,
@@ -360,7 +361,7 @@ class ApiSpec
     response should be('left)
   }
 
-  "Repos >> GetStatus" should "return the expected combined status when a valid ref is provided" in {
+  "Repos >> GetStatus" should "return the expected combined status when a valid ref is provided" taggedAs Integration in {
     val response =
       repos.getStatus(accessToken, headerUserAgent, validRepoOwner, validRepoName, validRefSingle)
     response should be('right)
@@ -380,7 +381,7 @@ class ApiSpec
     response should be('left)
   }
 
-  "Repos >> ListStatus" should "return the expected statuses when a valid ref is provided" in {
+  "Repos >> ListStatus" should "return the expected statuses when a valid ref is provided" taggedAs Integration in {
     val response = repos.listStatuses(
       accessToken,
       headerUserAgent,
@@ -410,7 +411,7 @@ class ApiSpec
     }
   }
 
-  "Repos >> CreateStatus" should "return the created status if a valid sha is provided" in {
+  "Repos >> CreateStatus" should "return the created status if a valid sha is provided" taggedAs Integration in {
     val response = repos.createStatus(
       accessToken,
       headerUserAgent,
@@ -467,7 +468,7 @@ class ApiSpec
     val response = users.get(accessToken, headerUserAgent, invalidUsername)
     response should be('left)
   }
-  "Users >> GetAuth" should "return the expected login for a valid accessToken" in {
+  "Users >> GetAuth" should "return the expected login for a valid accessToken" taggedAs Integration in {
     val response = users.getAuth(accessToken, headerUserAgent)
     response should be('right)
 
@@ -501,7 +502,7 @@ class ApiSpec
     }
   }
 
-  "Gists >> PostGist" should "return the provided gist for a valid request" in {
+  "Gists >> PostGist" should "return the provided gist for a valid request" taggedAs Integration in {
     val response =
       gists.newGist(
         validGistDescription,
@@ -516,7 +517,7 @@ class ApiSpec
     }
   }
 
-  "Gists >> GetGist" should "return the single gist for a valid request" in {
+  "Gists >> GetGist" should "return the single gist for a valid request" taggedAs Integration in {
     val response =
       gists.getGist(validGistId, sha = None, headerUserAgent, accessToken)
     response should be('right)
@@ -526,7 +527,7 @@ class ApiSpec
     }
   }
 
-  it should "return the specific revision of gist for a valid request" in {
+  it should "return the specific revision of gist for a valid request" taggedAs Integration in {
     val response =
       gists.getGist(validGistId, sha = Some(validGistSha), headerUserAgent, accessToken)
     response should be('right)
@@ -536,7 +537,7 @@ class ApiSpec
     }
   }
 
-  "Gists >> EditGist" should "return the provided gist for a valid request" in {
+  "Gists >> EditGist" should "return the provided gist for a valid request" taggedAs Integration in {
     val response =
       gists.editGist(
         validGistId,
@@ -586,7 +587,7 @@ class ApiSpec
     response should be('left)
   }
 
-  "GitData >> CreateReference" should "return the single reference" in {
+  "GitData >> CreateReference" should "return the single reference" taggedAs Integration in {
     val response =
       gitData.createReference(
         accessToken,
@@ -613,7 +614,7 @@ class ApiSpec
     response should be('left)
   }
 
-  "GitData >> UpdateReference" should "return the single reference" in {
+  "GitData >> UpdateReference" should "return the single reference" taggedAs Integration in {
     val response =
       gitData.updateReference(
         accessToken,
@@ -655,7 +656,7 @@ class ApiSpec
     response should be('left)
   }
 
-  "GitData >> CreateCommit" should "return the single commit" in {
+  "GitData >> CreateCommit" should "return the single commit" taggedAs Integration in {
     val response =
       gitData.createCommit(
         accessToken,
@@ -684,7 +685,7 @@ class ApiSpec
     response should be('left)
   }
 
-  "GitData >> CreateBlob" should "return the created blob" in {
+  "GitData >> CreateBlob" should "return the created blob" taggedAs Integration in {
     val response =
       gitData.createBlob(accessToken, headerUserAgent, validRepoOwner, validRepoName, validNote)
     response should be('right)
@@ -699,7 +700,7 @@ class ApiSpec
     response should be('left)
   }
 
-  "GitData >> CreateTree" should "return the created tree" in {
+  "GitData >> CreateTree" should "return the created tree" taggedAs Integration in {
     val response =
       gitData.createTree(
         accessToken,
@@ -836,7 +837,7 @@ class ApiSpec
     response should be('left)
   }
 
-  "PullRequests >> List PullRequestReviews" should "return a list of reviews when valid data is provided" in {
+  "PullRequests >> List PullRequestReviews" should "return a list of reviews when valid data is provided" taggedAs Integration in {
     val response = pullRequests.listReviews(
       accessToken,
       headerUserAgent,
@@ -855,7 +856,7 @@ class ApiSpec
     response should be('left)
   }
 
-  "PullRequests >> Get PullRequestReview" should "return a single review when valid data is provided" in {
+  "PullRequests >> Get PullRequestReview" should "return a single review when valid data is provided" taggedAs Integration in {
     val response = pullRequests.getReview(
       accessToken,
       headerUserAgent,
@@ -876,7 +877,7 @@ class ApiSpec
     response should be('left)
   }
 
-  "Issues >> List" should "return the expected issues when a valid owner/repo is provided" in {
+  "Issues >> List" should "return the expected issues when a valid owner/repo is provided" taggedAs Integration in {
     val response =
       issues.list(accessToken, headerUserAgent, validRepoOwner, validRepoName)
     response should be('right)
@@ -897,7 +898,7 @@ class ApiSpec
     response should be('left)
   }
 
-  "Issues >> Get" should "return the expected issue when a valid owner/repo is provided" in {
+  "Issues >> Get" should "return the expected issue when a valid owner/repo is provided" taggedAs Integration in {
     val response =
       issues.get(accessToken, headerUserAgent, validRepoOwner, validRepoName, validIssueNumber)
     response should be('right)
@@ -906,7 +907,7 @@ class ApiSpec
       r.statusCode shouldBe okStatusCode
     }
   }
-  it should "return an issue which is just a Pull Request" in {
+  it should "return an issue which is just a Pull Request" taggedAs Integration in {
     val response =
       issues.get(
         accessToken,
@@ -927,7 +928,7 @@ class ApiSpec
     response should be('left)
   }
 
-  "Issues >> Create" should "return the created issue if valid data is provided" in {
+  "Issues >> Create" should "return the created issue if valid data is provided" taggedAs Integration in {
     val response = issues.create(
       accessToken,
       headerUserAgent,
@@ -971,7 +972,7 @@ class ApiSpec
     response should be('left)
   }
 
-  "Issues >> Edit" should "return the edited issue if valid data is provided" in {
+  "Issues >> Edit" should "return the edited issue if valid data is provided" taggedAs Integration in {
     val response = issues.edit(
       accessToken,
       headerUserAgent,
@@ -1021,7 +1022,7 @@ class ApiSpec
     response should be('left)
   }
 
-  "Issues >> Search" should "return the search result if valid data is provided" in {
+  "Issues >> Search" should "return the search result if valid data is provided" taggedAs Integration in {
     val response = issues.search(accessToken, headerUserAgent, validSearchQuery, List.empty)
     response should be('right)
 
@@ -1029,7 +1030,7 @@ class ApiSpec
       r.statusCode shouldBe okStatusCode
     }
   }
-  it should "return an empty result if a search query matching nothing is provided" in {
+  it should "return an empty result if a search query matching nothing is provided" taggedAs Integration in {
     val response =
       issues.search(accessToken, headerUserAgent, nonExistentSearchQuery, List.empty)
     response should be('right)
@@ -1040,7 +1041,7 @@ class ApiSpec
     }
   }
 
-  "Issues >> ListComments" should "return the expected issue comments when a valid issue number is provided" in {
+  "Issues >> ListComments" should "return the expected issue comments when a valid issue number is provided" taggedAs Integration in {
     val response =
       issues.listComments(
         accessToken,
@@ -1071,7 +1072,7 @@ class ApiSpec
     response should be('left)
   }
 
-  "Issues >> Create a Comment" should "return the comment created when a valid issue number is provided" in {
+  "Issues >> Create a Comment" should "return the comment created when a valid issue number is provided" taggedAs Integration in {
     val response =
       issues.createComment(
         accessToken,
@@ -1105,7 +1106,7 @@ class ApiSpec
     response should be('left)
   }
 
-  "Issues >> Edit a Comment" should "return the edited comment when a valid comment id is provided" in {
+  "Issues >> Edit a Comment" should "return the edited comment when a valid comment id is provided" taggedAs Integration in {
     val response =
       issues.editComment(
         accessToken,
@@ -1139,7 +1140,7 @@ class ApiSpec
     response should be('left)
   }
 
-  "Issues >> Delete a Comment" should "return deleted status when a valid comment id is provided" in {
+  "Issues >> Delete a Comment" should "return deleted status when a valid comment id is provided" taggedAs Integration in {
     val response =
       issues.deleteComment(
         accessToken,
@@ -1165,7 +1166,7 @@ class ApiSpec
     response should be('left)
   }
 
-  "Issues >> ListLabels" should "return the expected issue labels when a valid issue number is provided" in {
+  "Issues >> ListLabels" should "return the expected issue labels when a valid issue number is provided" taggedAs Integration in {
     val response =
       issues.listLabels(
         accessToken,
@@ -1196,7 +1197,7 @@ class ApiSpec
     response should be('left)
   }
 
-  "Issues >> RemoveLabel" should "return the removed issue labels when a valid issue number is provided" in {
+  "Issues >> RemoveLabel" should "return the removed issue labels when a valid issue number is provided" taggedAs Integration in {
     val response =
       issues.removeLabel(
         accessToken,
@@ -1235,7 +1236,7 @@ class ApiSpec
     response should be('left)
   }
 
-  "Issues >> AddLabels" should "return the assigned issue labels when a valid issue number is provided" in {
+  "Issues >> AddLabels" should "return the assigned issue labels when a valid issue number is provided" taggedAs Integration in {
     val response =
       issues.addLabels(
         accessToken,
@@ -1325,7 +1326,7 @@ class ApiSpec
     }
   }
 
-  "Activities >> Set a Thread Subscription" should "return the subscription when a valid thread id is provided" in {
+  "Activities >> Set a Thread Subscription" should "return the subscription when a valid thread id is provided" taggedAs Integration in {
     val response =
       activities.setThreadSub(accessToken, headerUserAgent, validThreadId, true, false)
     response should be('right)

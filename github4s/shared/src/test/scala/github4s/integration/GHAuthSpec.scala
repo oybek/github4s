@@ -20,11 +20,11 @@ import github4s.Github
 import github4s.Github._
 import github4s.free.domain.Authorize
 import github4s.implicits._
-import github4s.utils.BaseIntegrationSpec
+import github4s.utils.{BaseIntegrationSpec, Integration}
 
 trait GHAuthSpec[T] extends BaseIntegrationSpec[T] {
 
-  "Auth >> NewAuth" should "return error on Left when invalid credential is provided" in {
+  "Auth >> NewAuth" should "return error on Left when invalid credential is provided" taggedAs Integration in {
 
     val response = Github().auth
       .newAuth(
@@ -39,7 +39,7 @@ trait GHAuthSpec[T] extends BaseIntegrationSpec[T] {
     testFutureIsLeft(response)
   }
 
-  "Auth >> AuthorizeUrl" should "return the expected URL for valid username" in {
+  "Auth >> AuthorizeUrl" should "return the expected URL for valid username" taggedAs Integration in {
     val response =
       Github().auth
         .authorizeUrl(validClientId, validRedirectUri, validScopes)
@@ -51,7 +51,7 @@ trait GHAuthSpec[T] extends BaseIntegrationSpec[T] {
     })
   }
 
-  "Auth >> GetAccessToken" should "return error on Left for invalid code value" in {
+  "Auth >> GetAccessToken" should "return error on Left for invalid code value" taggedAs Integration in {
     val response = Github().auth
       .getAccessToken(validClientId, invalidClientSecret, "", validRedirectUri, "")
       .execFuture[T](headerUserAgent)

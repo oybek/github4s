@@ -20,11 +20,11 @@ import github4s.Github
 import github4s.Github._
 import github4s.free.domain._
 import github4s.implicits._
-import github4s.utils.BaseIntegrationSpec
+import github4s.utils.{BaseIntegrationSpec, Integration}
 
 trait GHPullRequestsSpec[T] extends BaseIntegrationSpec[T] {
 
-  "PullRequests >> Get" should "return a right response when a valid pr number is provided" in {
+  "PullRequests >> Get" should "return a right response when a valid pr number is provided" taggedAs Integration in {
     val response =
       Github(accessToken).pullRequests
         .get(validRepoOwner, validRepoName, validPullRequestNumber)
@@ -35,7 +35,7 @@ trait GHPullRequestsSpec[T] extends BaseIntegrationSpec[T] {
     })
   }
 
-  it should "return an error when a valid issue number is provided" in {
+  it should "return an error when a valid issue number is provided" taggedAs Integration in {
     val response =
       Github(accessToken).pullRequests
         .get(validRepoOwner, validRepoName, validIssueNumber)
@@ -44,7 +44,7 @@ trait GHPullRequestsSpec[T] extends BaseIntegrationSpec[T] {
     testFutureIsLeft(response)
   }
 
-  it should "return an error when an invalid repo name is passed" in {
+  it should "return an error when an invalid repo name is passed" taggedAs Integration in {
     val response =
       Github(accessToken).pullRequests
         .get(validRepoOwner, invalidRepoName, validPullRequestNumber)
@@ -53,7 +53,7 @@ trait GHPullRequestsSpec[T] extends BaseIntegrationSpec[T] {
     testFutureIsLeft(response)
   }
 
-  "PullRequests >> List" should "return a right response when valid repo is provided" in {
+  "PullRequests >> List" should "return a right response when valid repo is provided" taggedAs Integration in {
     val response =
       Github(accessToken).pullRequests
         .list(validRepoOwner, validRepoName, pagination = Some(Pagination(1, 10)))
@@ -64,7 +64,7 @@ trait GHPullRequestsSpec[T] extends BaseIntegrationSpec[T] {
     })
   }
 
-  it should "return a right response when a valid repo is provided but not all pull requests have body" in {
+  it should "return a right response when a valid repo is provided but not all pull requests have body" taggedAs Integration in {
     val response =
       Github(accessToken).pullRequests
         .list("lloydmeta", "gh-test-repo", List(PRFilterOpen))
@@ -76,7 +76,7 @@ trait GHPullRequestsSpec[T] extends BaseIntegrationSpec[T] {
     })
   }
 
-  it should "return a non empty list when valid repo and some filters are provided" in {
+  it should "return a non empty list when valid repo and some filters are provided" taggedAs Integration in {
     val response =
       Github(accessToken).pullRequests
         .list(
@@ -91,7 +91,7 @@ trait GHPullRequestsSpec[T] extends BaseIntegrationSpec[T] {
     })
   }
 
-  it should "return error when an invalid repo name is passed" in {
+  it should "return error when an invalid repo name is passed" taggedAs Integration in {
     val response =
       Github(accessToken).pullRequests
         .list(validRepoOwner, invalidRepoName)
@@ -100,7 +100,7 @@ trait GHPullRequestsSpec[T] extends BaseIntegrationSpec[T] {
     testFutureIsLeft(response)
   }
 
-  "PullRequests >> ListFiles" should "return a right response when a valid repo is provided" in {
+  "PullRequests >> ListFiles" should "return a right response when a valid repo is provided" taggedAs Integration in {
     val response =
       Github(accessToken).pullRequests
         .listFiles(validRepoOwner, validRepoName, validPullRequestNumber)
@@ -112,7 +112,7 @@ trait GHPullRequestsSpec[T] extends BaseIntegrationSpec[T] {
     })
   }
 
-  it should "return a right response when a valid repo is provided and not all files have 'patch'" in {
+  it should "return a right response when a valid repo is provided and not all files have 'patch'" taggedAs Integration in {
     val response =
       Github(accessToken).pullRequests
         .listFiles("scala", "scala", 4877)
@@ -124,7 +124,7 @@ trait GHPullRequestsSpec[T] extends BaseIntegrationSpec[T] {
     })
   }
 
-  it should "return error when an invalid repo name is passed" in {
+  it should "return error when an invalid repo name is passed" taggedAs Integration in {
     val response =
       Github(accessToken).pullRequests
         .listFiles(validRepoOwner, invalidRepoName, validPullRequestNumber)
@@ -133,7 +133,7 @@ trait GHPullRequestsSpec[T] extends BaseIntegrationSpec[T] {
     testFutureIsLeft(response)
   }
 
-  "PullRequests >> ListReviews" should "return a right response when a valid pr is provided" in {
+  "PullRequests >> ListReviews" should "return a right response when a valid pr is provided" taggedAs Integration in {
     val response =
       Github(accessToken).pullRequests
         .listReviews(validRepoOwner, validRepoName, validPullRequestNumber)
@@ -145,7 +145,7 @@ trait GHPullRequestsSpec[T] extends BaseIntegrationSpec[T] {
     })
   }
 
-  it should "return error when an invalid repo name is passed" in {
+  it should "return error when an invalid repo name is passed" taggedAs Integration in {
     val response =
       Github(accessToken).pullRequests
         .listReviews(validRepoOwner, invalidRepoName, validPullRequestNumber)
@@ -154,7 +154,7 @@ trait GHPullRequestsSpec[T] extends BaseIntegrationSpec[T] {
     testFutureIsLeft(response)
   }
 
-  "PullRequests >> GetReview" should "return a right response when a valid pr review is provided" in {
+  "PullRequests >> GetReview" should "return a right response when a valid pr review is provided" taggedAs Integration in {
     val response =
       Github(accessToken).pullRequests
         .getReview(validRepoOwner, validRepoName, validPullRequestNumber, validPullRequestReviewNumber)
@@ -166,7 +166,7 @@ trait GHPullRequestsSpec[T] extends BaseIntegrationSpec[T] {
     })
   }
 
-  it should "return error when an invalid repo name is passed" in {
+  it should "return error when an invalid repo name is passed" taggedAs Integration in {
     val response =
       Github(accessToken).pullRequests
         .getReview(validRepoOwner, invalidRepoName, validPullRequestNumber, validPullRequestReviewNumber)

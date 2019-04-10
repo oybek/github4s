@@ -20,11 +20,11 @@ import github4s.Github
 import github4s.Github._
 import github4s.free.domain.{Stargazer, StarredRepository, Subscription}
 import github4s.implicits._
-import github4s.utils.BaseIntegrationSpec
+import github4s.utils.{BaseIntegrationSpec, Integration}
 
 trait GHActivitiesSpec[T] extends BaseIntegrationSpec[T] {
 
-  "Activity >> Set a thread subscription" should "return expected response when a valid thread id is provided" in {
+  "Activity >> Set a thread subscription" should "return expected response when a valid thread id is provided" taggedAs Integration in {
     val response =
       Github(accessToken).activities
         .setThreadSub(validThreadId, true, false)
@@ -35,7 +35,7 @@ trait GHActivitiesSpec[T] extends BaseIntegrationSpec[T] {
     })
   }
 
-  it should "return error when an invalid thread id is passed" in {
+  it should "return error when an invalid thread id is passed" taggedAs Integration in {
     val response =
       Github(accessToken).activities
         .setThreadSub(invalidThreadId, true, false)
@@ -44,8 +44,7 @@ trait GHActivitiesSpec[T] extends BaseIntegrationSpec[T] {
     testFutureIsLeft(response)
   }
 
-
-  "Activity >> ListStargazers" should "return the expected list of starrers for valid data" in {
+  "Activity >> ListStargazers" should "return the expected list of starrers for valid data" taggedAs Integration in {
     val response =
       Github(accessToken).activities
         .listStargazers(validRepoOwner, validRepoName, false)
@@ -58,7 +57,7 @@ trait GHActivitiesSpec[T] extends BaseIntegrationSpec[T] {
     })
   }
 
-  it should "return the expected list of starrers for valid data with dates if timeline" in {
+  it should "return the expected list of starrers for valid data with dates if timeline" taggedAs Integration in {
     val response =
       Github(accessToken).activities
         .listStargazers(validRepoOwner, validRepoName, true)
@@ -80,7 +79,7 @@ trait GHActivitiesSpec[T] extends BaseIntegrationSpec[T] {
     testFutureIsLeft(response)
   }
 
-  "Activity >> ListStarredRepositories" should "return the expected list of starred repos" in {
+  "Activity >> ListStarredRepositories" should "return the expected list of starred repos" taggedAs Integration in {
     val response =
       Github(accessToken).activities
         .listStarredRepositories(validUsername, false)
@@ -93,7 +92,7 @@ trait GHActivitiesSpec[T] extends BaseIntegrationSpec[T] {
     })
   }
 
-  it should "return the expected list of starred repos with dates if timeline" in {
+  it should "return the expected list of starred repos with dates if timeline" taggedAs Integration in {
     val response =
       Github(accessToken).activities
         .listStarredRepositories(validUsername, true)
@@ -106,7 +105,7 @@ trait GHActivitiesSpec[T] extends BaseIntegrationSpec[T] {
     })
   }
 
-  it should "return error for invalid username" in {
+  it should "return error for invalid username" taggedAs Integration in {
     val response =
       Github(accessToken).activities
         .listStarredRepositories(invalidUsername, false)

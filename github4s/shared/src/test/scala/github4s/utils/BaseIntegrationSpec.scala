@@ -20,12 +20,13 @@ import cats.syntax.either._
 import github4s.GithubResponses.{GHResponse, GHResult}
 import github4s.free.interpreters.{Capture, Interpreters}
 import github4s.HttpRequestBuilderExtension
-import org.scalatest.{Assertion, AsyncFlatSpec, Inspectors, Matchers}
+import org.scalatest.{Assertion, AsyncFlatSpec, Ignore, Inspectors, Matchers, Tag}
 
 import scala.concurrent.{ExecutionContext, Future}
 
-abstract class BaseIntegrationSpec[T] extends AsyncFlatSpec with Matchers with Inspectors with TestData {
+object Integration extends Tag(if (sys.env.get("GITHUB4S_ACCESS_TOKEN").isDefined) "" else classOf[Ignore].getName)
 
+abstract class BaseIntegrationSpec[T] extends AsyncFlatSpec with Matchers with Inspectors with TestData {
   override implicit val executionContext: ExecutionContext =
     scala.concurrent.ExecutionContext.Implicits.global
 

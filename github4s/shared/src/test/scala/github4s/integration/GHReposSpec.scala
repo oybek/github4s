@@ -21,11 +21,11 @@ import github4s.Github
 import github4s.Github._
 import github4s.free.domain._
 import github4s.implicits._
-import github4s.utils.BaseIntegrationSpec
+import github4s.utils.{BaseIntegrationSpec, Integration}
 
 trait GHReposSpec[T] extends BaseIntegrationSpec[T] {
 
-  "Repos >> Get" should "return the expected name when a valid repo is provided" in {
+  "Repos >> Get" should "return the expected name when a valid repo is provided" taggedAs Integration in {
     val response =
       Github(accessToken).repos
         .get(validRepoOwner, validRepoName)
@@ -37,7 +37,7 @@ trait GHReposSpec[T] extends BaseIntegrationSpec[T] {
     })
   }
 
-  it should "return error when an invalid repo name is passed" in {
+  it should "return error when an invalid repo name is passed" taggedAs Integration in {
     val response =
       Github(accessToken).repos
         .get(validRepoOwner, invalidRepoName)
@@ -46,7 +46,7 @@ trait GHReposSpec[T] extends BaseIntegrationSpec[T] {
     testFutureIsLeft(response)
   }
 
-  "Repos >> ListOrgRepos" should "return the expected repos when a valid org is provided" in {
+  "Repos >> ListOrgRepos" should "return the expected repos when a valid org is provided" taggedAs Integration in {
     val response =
       Github(accessToken).repos
         .listOrgRepos(validRepoOwner)
@@ -58,7 +58,7 @@ trait GHReposSpec[T] extends BaseIntegrationSpec[T] {
     })
   }
 
-  it should "return error when an invalid org is passed" in {
+  it should "return error when an invalid org is passed" taggedAs Integration in {
     val response =
       Github(accessToken).repos
         .listOrgRepos(invalidRepoName)
@@ -67,7 +67,7 @@ trait GHReposSpec[T] extends BaseIntegrationSpec[T] {
     testFutureIsLeft(response)
   }
 
-  "Repos >> ListUserRepos" should "return the expected repos when a valid user is provided" in {
+  "Repos >> ListUserRepos" should "return the expected repos when a valid user is provided" taggedAs Integration in {
     val response = Github(accessToken).repos
       .listUserRepos(validUsername)
       .execFuture[T](headerUserAgent)
@@ -78,7 +78,7 @@ trait GHReposSpec[T] extends BaseIntegrationSpec[T] {
     })
   }
 
-  it should "return error when an invalid user is passed" in {
+  it should "return error when an invalid user is passed" taggedAs Integration in {
     val response = Github(accessToken).repos
       .listUserRepos(invalidUsername)
       .execFuture[T](headerUserAgent)
@@ -86,7 +86,7 @@ trait GHReposSpec[T] extends BaseIntegrationSpec[T] {
     testFutureIsLeft(response)
   }
 
-  "Repos >> GetContents" should "return the expected contents when valid path is provided" in {
+  "Repos >> GetContents" should "return the expected contents when valid path is provided" taggedAs Integration in {
     val response =
       Github(accessToken).repos
         .getContents(validRepoOwner, validRepoName, validFilePath)
@@ -98,7 +98,7 @@ trait GHReposSpec[T] extends BaseIntegrationSpec[T] {
     })
   }
 
-  it should "return error when an invalid path is passed" in {
+  it should "return error when an invalid path is passed" taggedAs Integration in {
     val response =
       Github(accessToken).repos
         .getContents(validRepoOwner, validRepoName, invalidFilePath)
@@ -106,7 +106,7 @@ trait GHReposSpec[T] extends BaseIntegrationSpec[T] {
     testFutureIsLeft(response)
   }
 
-  "Repos >> ListCommits" should "return the expected list of commits for valid data" in {
+  "Repos >> ListCommits" should "return the expected list of commits for valid data" taggedAs Integration in {
     val response =
       Github(accessToken).repos
         .listCommits(validRepoOwner, validRepoName)
@@ -118,7 +118,7 @@ trait GHReposSpec[T] extends BaseIntegrationSpec[T] {
     })
   }
 
-  it should "return error for invalid repo name" in {
+  it should "return error for invalid repo name" taggedAs Integration in {
     val response =
       Github(accessToken).repos
         .listCommits(invalidRepoName, validRepoName)
@@ -127,7 +127,7 @@ trait GHReposSpec[T] extends BaseIntegrationSpec[T] {
     testFutureIsLeft(response)
   }
 
-  "Repos >> ListBranches" should "return the expected list of branches for valid data" in {
+  "Repos >> ListBranches" should "return the expected list of branches for valid data" taggedAs Integration in {
     val response =
       Github(accessToken).repos
       .listBranches(validRepoOwner, validRepoName)
@@ -139,7 +139,7 @@ trait GHReposSpec[T] extends BaseIntegrationSpec[T] {
     })
   }
 
-  it should "return error for invalid repo name" in {
+  it should "return error for invalid repo name" taggedAs Integration in {
     val response =
       Github(accessToken).repos
         .listBranches(invalidRepoName, validRepoName)
@@ -148,7 +148,7 @@ trait GHReposSpec[T] extends BaseIntegrationSpec[T] {
     testFutureIsLeft(response)
   }
 
-  "Repos >> ListContributors" should "return the expected list of contributors for valid data" in {
+  "Repos >> ListContributors" should "return the expected list of contributors for valid data" taggedAs Integration in {
     val response =
       Github(accessToken).repos
         .listContributors(validRepoOwner, validRepoName)
@@ -160,7 +160,7 @@ trait GHReposSpec[T] extends BaseIntegrationSpec[T] {
     })
   }
 
-  it should "return error for invalid repo name" in {
+  it should "return error for invalid repo name" taggedAs Integration in {
     val response =
       Github(accessToken).repos
         .listContributors(invalidRepoName, validRepoName)
@@ -169,7 +169,7 @@ trait GHReposSpec[T] extends BaseIntegrationSpec[T] {
     testFutureIsLeft(response)
   }
 
-  "Repos >> ListCollaborators" should "return the expected list of collaborators for valid data" in {
+  "Repos >> ListCollaborators" should "return the expected list of collaborators for valid data" taggedAs Integration in {
     val response =
       Github(accessToken).repos
         .listCollaborators(validRepoOwner, validRepoName)
@@ -181,7 +181,7 @@ trait GHReposSpec[T] extends BaseIntegrationSpec[T] {
     })
   }
 
-  it should "return error for invalid repo name" in {
+  it should "return error for invalid repo name" taggedAs Integration in {
     val response =
       Github(accessToken).repos
         .listCollaborators(invalidRepoName, validRepoName)
@@ -190,7 +190,7 @@ trait GHReposSpec[T] extends BaseIntegrationSpec[T] {
     testFutureIsLeft(response)
   }
 
-  "Repos >> GetStatus" should "return a combined status" in {
+  "Repos >> GetStatus" should "return a combined status" taggedAs Integration in {
     val response = Github(accessToken).repos
       .getCombinedStatus(validRepoOwner, validRepoName, validRefSingle)
       .execFuture[T](headerUserAgent)
@@ -201,14 +201,14 @@ trait GHReposSpec[T] extends BaseIntegrationSpec[T] {
     })
   }
 
-  it should "return an error when an invalid ref is passed" in {
+  it should "return an error when an invalid ref is passed" taggedAs Integration in {
     val response = Github(accessToken).repos
       .getCombinedStatus(validRepoOwner, validRepoName, invalidRef)
       .execFuture[T](headerUserAgent)
     testFutureIsLeft(response)
   }
 
-  "Repos >> ListStatus" should "return a non empty list when a valid ref is provided" in {
+  "Repos >> ListStatus" should "return a non empty list when a valid ref is provided" taggedAs Integration in {
     val response = Github(accessToken).repos
       .listStatuses(validRepoOwner, validRepoName, validCommitSha)
       .execFuture[T](headerUserAgent)
@@ -219,7 +219,7 @@ trait GHReposSpec[T] extends BaseIntegrationSpec[T] {
     })
   }
 
-  it should "return an error when an invalid ref is provided" in {
+  it should "return an error when an invalid ref is provided" taggedAs Integration in {
     val response = Github(accessToken).repos
       .listStatuses(validRepoOwner, validRepoName, invalidRef)
       .execFuture[T](headerUserAgent)

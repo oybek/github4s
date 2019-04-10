@@ -20,11 +20,11 @@ import github4s.Github
 import github4s.Github._
 import github4s.free.domain.User
 import github4s.implicits._
-import github4s.utils.BaseIntegrationSpec
+import github4s.utils.{BaseIntegrationSpec, Integration}
 
 trait GHOrganizationsSpec[T] extends BaseIntegrationSpec[T] {
 
-  "Organization >> ListMembers" should "return the expected list of users" in {
+  "Organization >> ListMembers" should "return the expected list of users" taggedAs Integration in {
     val response =
       Github(accessToken).organizations
         .listMembers(validRepoOwner)
@@ -36,7 +36,7 @@ trait GHOrganizationsSpec[T] extends BaseIntegrationSpec[T] {
     })
   }
 
-  it should "return error for an invalid org" in {
+  it should "return error for an invalid org" taggedAs Integration in {
     val response =
       Github(accessToken).organizations
         .listMembers(invalidUsername)
@@ -45,7 +45,7 @@ trait GHOrganizationsSpec[T] extends BaseIntegrationSpec[T] {
     testFutureIsLeft(response)
   }
 
-  "Organization >> ListOutsideCollaborators" should "return expected list of users" in {
+  "Organization >> ListOutsideCollaborators" should "return expected list of users" taggedAs Integration in {
     val response =
       Github(accessToken).organizations
       .listOutsideCollaborators(validOrganizationName)
@@ -57,7 +57,7 @@ trait GHOrganizationsSpec[T] extends BaseIntegrationSpec[T] {
     })
   }
 
-  it should "return error for an invalid org" in {
+  it should "return error for an invalid org" taggedAs Integration in {
     val response =
       Github(accessToken).organizations
         .listOutsideCollaborators(invalidOrganizationName)

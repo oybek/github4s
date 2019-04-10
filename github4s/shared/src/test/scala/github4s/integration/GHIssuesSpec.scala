@@ -20,11 +20,11 @@ import github4s.Github
 import github4s.Github._
 import github4s.free.domain.{Issue, Label, SearchIssuesResult, User}
 import github4s.implicits._
-import github4s.utils.BaseIntegrationSpec
+import github4s.utils.{BaseIntegrationSpec, Integration}
 
 trait GHIssuesSpec[T] extends BaseIntegrationSpec[T] {
 
-  "Issues >> List" should "return a list of issues" in {
+  "Issues >> List" should "return a list of issues" taggedAs Integration in {
     val response = Github(accessToken).issues
       .listIssues(validRepoOwner, validRepoName)
       .execFuture[T](headerUserAgent)
@@ -46,7 +46,7 @@ trait GHIssuesSpec[T] extends BaseIntegrationSpec[T] {
     })
   }
 
-  "Issues >> Search" should "return at least one issue for a valid query" in {
+  "Issues >> Search" should "return at least one issue for a valid query" taggedAs Integration in {
     val response = Github(accessToken).issues
       .searchIssues(validSearchQuery, validSearchParams)
       .execFuture[T](headerUserAgent)
@@ -58,7 +58,7 @@ trait GHIssuesSpec[T] extends BaseIntegrationSpec[T] {
     })
   }
 
-  it should "return an empty result for a non existent query string" in {
+  it should "return an empty result for a non existent query string" taggedAs Integration in {
     val response = Github(accessToken).issues
       .searchIssues(nonExistentSearchQuery, validSearchParams)
       .execFuture[T](headerUserAgent)
@@ -70,7 +70,7 @@ trait GHIssuesSpec[T] extends BaseIntegrationSpec[T] {
     })
   }
 
-  "Issues >> Edit" should "edit the specified issue" in {
+  "Issues >> Edit" should "edit the specified issue" taggedAs Integration in {
     val response = Github(accessToken).issues
       .editIssue(
         validRepoOwner,
@@ -91,7 +91,7 @@ trait GHIssuesSpec[T] extends BaseIntegrationSpec[T] {
     })
   }
 
-  "Issues >> ListLabels" should "return a list of labels" in {
+  "Issues >> ListLabels" should "return a list of labels" taggedAs Integration in {
     val response = Github(accessToken).issues
       .listLabels(validRepoOwner, validRepoName, validIssueNumber)
       .execFuture[T](headerUserAgent)
@@ -102,7 +102,7 @@ trait GHIssuesSpec[T] extends BaseIntegrationSpec[T] {
     })
   }
 
-  "Issues >> RemoveLabel" should "return a list of removed labels" in {
+  "Issues >> RemoveLabel" should "return a list of removed labels" taggedAs Integration in {
     val response = Github(accessToken).issues
       .removeLabel(validRepoOwner, validRepoName, validIssueNumber, validIssueLabel.head)
       .execFuture[T](headerUserAgent)
@@ -113,7 +113,7 @@ trait GHIssuesSpec[T] extends BaseIntegrationSpec[T] {
     })
   }
 
-  "Issues >> AddLabels" should "return a list of labels" in {
+  "Issues >> AddLabels" should "return a list of labels" taggedAs Integration in {
     val response = Github(accessToken).issues
       .addLabels(validRepoOwner, validRepoName, validIssueNumber, validIssueLabel)
       .execFuture[T](headerUserAgent)
@@ -124,7 +124,7 @@ trait GHIssuesSpec[T] extends BaseIntegrationSpec[T] {
     })
   }
 
-  "GHIssues >> ListAvailableAssignees" should "return a list of users" in {
+  "GHIssues >> ListAvailableAssignees" should "return a list of users" taggedAs Integration in {
     val response = Github(accessToken).issues
       .listAvailableAssignees(validRepoOwner, validRepoName)
       .execFuture[T](headerUserAgent)
@@ -135,7 +135,7 @@ trait GHIssuesSpec[T] extends BaseIntegrationSpec[T] {
     })
   }
 
-  it should "return error for an invalid repo owner" in {
+  it should "return error for an invalid repo owner" taggedAs Integration in {
     val response = Github(accessToken).issues
       .listAvailableAssignees(invalidRepoOwner, validRepoName)
       .execFuture[T](headerUserAgent)
@@ -143,7 +143,7 @@ trait GHIssuesSpec[T] extends BaseIntegrationSpec[T] {
     testFutureIsLeft(response)
   }
 
-  it should "return error for an invalid repo name" in {
+  it should "return error for an invalid repo name" taggedAs Integration in {
     val response = Github(accessToken).issues
       .listAvailableAssignees(validRepoOwner, invalidRepoName)
       .execFuture[T](headerUserAgent)

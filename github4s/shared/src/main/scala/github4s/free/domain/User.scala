@@ -31,5 +31,6 @@ case class User(
     following_url: Option[String] = None,
     `type`: String = "User", // I think this can be either "User" or "Organization"
     hireable: Option[Boolean] = None,
-    public_repos: Option[Int] = None
+    public_repos: Option[Int] = None,
+    contributions: Option[Int] = None
 )

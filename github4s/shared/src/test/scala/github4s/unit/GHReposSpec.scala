@@ -71,15 +71,28 @@ class GHReposSpec extends BaseSpec {
   "GHRepos.contents" should "call to RepositoryOps with the right parameters" in {
 
     val response: Free[GitHub4s, GHResponse[NonEmptyList[Content]]] =
-      Free.pure(Right(GHResult(NonEmptyList(content, Nil), okStatusCode, Map.empty)))
+      Free.pure(
+        Right(GHResult(NonEmptyList(content, Nil), okStatusCode, Map.empty))
+      )
 
     val repoOps = mock[RepositoryOpsTest]
     (repoOps.getContents _)
-      .expects(validRepoOwner, validRepoName, validFilePath, Some("master"), sampleToken)
+      .expects(
+        validRepoOwner,
+        validRepoName,
+        validFilePath,
+        Some("master"),
+        sampleToken
+      )
       .returns(response)
 
     val ghReposData = new GHRepos(sampleToken)(repoOps)
-    ghReposData.getContents(validRepoOwner, validRepoName, validFilePath, Some("master"))
+    ghReposData.getContents(
+      validRepoOwner,
+      validRepoName,
+      validFilePath,
+      Some("master")
+    )
   }
 
   "GHRepos.listCommits" should "call to RepositoryOps with the right parameters" in {
@@ -89,7 +102,17 @@ class GHReposSpec extends BaseSpec {
 
     val repoOps = mock[RepositoryOpsTest]
     (repoOps.listCommits _)
-      .expects(validRepoOwner, validRepoName, None, None, None, None, None, None, sampleToken)
+      .expects(
+        validRepoOwner,
+        validRepoName,
+        None,
+        None,
+        None,
+        None,
+        None,
+        None,
+        sampleToken
+      )
       .returns(response)
 
     val ghReposData = new GHRepos(sampleToken)(repoOps)
@@ -131,7 +154,7 @@ class GHReposSpec extends BaseSpec {
 
     val repoOps = mock[RepositoryOpsTest]
     (repoOps.listContributors _)
-      .expects(validRepoOwner, validRepoName, None, sampleToken)
+      .expects(validRepoOwner, validRepoName, None, sampleToken, None)
       .returns(response)
 
     val ghReposData = new GHRepos(sampleToken)(repoOps)
@@ -168,7 +191,8 @@ class GHReposSpec extends BaseSpec {
         Some("master"),
         Some(false),
         Some(false),
-        sampleToken)
+        sampleToken
+      )
       .returns(response)
 
     val ghReposData = new GHRepos(sampleToken)(repoOps)
@@ -180,7 +204,8 @@ class GHReposSpec extends BaseSpec {
       validNote,
       Some("master"),
       Some(false),
-      Some(false))
+      Some(false)
+    )
   }
 
   "GHRepos.getStatus" should "call to RepositoryOps with the right parameters" in {
@@ -221,7 +246,8 @@ class GHReposSpec extends BaseSpec {
         None,
         None,
         None,
-        sampleToken)
+        sampleToken
+      )
       .returns(response)
     val ghReposData = new GHRepos(sampleToken)(repoOps)
     ghReposData
@@ -232,6 +258,7 @@ class GHReposSpec extends BaseSpec {
         validStatusState,
         None,
         None,
-        None)
+        None
+      )
   }
 }

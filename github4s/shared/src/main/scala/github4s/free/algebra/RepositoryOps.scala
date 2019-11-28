@@ -23,39 +23,142 @@ import github4s.GithubResponses.GHResponse
 import github4s.free.domain._
 
 /**
- * Repositories ops ADT
- */
+  * Repositories ops ADT
+  */
 sealed trait RepositoryOp[A]
 
-final case class GetRepo(
+final case class GetRepo(owner: String,
+                         repo: String,
+                         accessToken: Option[String] = None)
+    extends RepositoryOp[GHResponse[Repository]]
+
+final case class ListOrgRepos(org: String,
+                              `type`: Option[String] = None,
+                              pagination: Option[Pagination] = None,
+                              accessToken: Option[String] = None)
+    extends RepositoryOp[GHResponse[List[Repository]]]
+
+final case class ListUserRepos(user: String,
+                               `type`: Option[String] = None,
+                               pagination: Option[Pagination] = None,
+                               accessToken: Option[String] = None)
+    extends RepositoryOp[GHResponse[List[Repository]]]
+
+final case class GetContents(owner: String,
+                             repo: String,
+                             path: String,
+                             ref: Option[String] = None,
+                             accessToken: Option[String] = None)
+    extends RepositoryOp[GHResponse[NonEmptyList[Content]]]
+
+final case class ListCommits(owner: String,
+                             repo: String,
+                             sha: Option[String] = None,
+                             path: Option[String] = None,
+                             author: Option[String] = None,
+                             since: Option[String] = None,
+                             until: Option[String] = None,
+                             pagination: Option[Pagination] = None,
+                             accessToken: Option[String] = None)
+    extends RepositoryOp[GHResponse[List[Commit]]]
+
+final case class ListBranches(owner: String,
+                              repo: String,
+                              `protected`: Option[Boolean] = None,
+                              accessToken: Option[String] = None)
+    extends RepositoryOp[GHResponse[List[Branch]]]
+
+final case class ListContributors(owner: String,
+                                  repo: String,
+                                  anon: Option[String] = None,
+                                  accessToken: Option[String] = None,
+                                  pagination: Option[Pagination] = None,
+) extends RepositoryOp[GHResponse[List[User]]]
+
+final case class ListCollaborators(owner: String,
+                                   repo: String,
+                                   affiliation: Option[String] = None,
+                                   accessToken: Option[String] = None)
+    extends RepositoryOp[GHResponse[List[User]]]
+
+final case class CreateRelease(owner: String,
+                               repo: String,
+                               tagName: String,
+                               name: String,
+                               body: String,
+                               targetCommitish: Option[String] = None,
+                               draft: Option[Boolean] = None,
+                               prerelease: Option[Boolean] = None,
+                               accessToken: Option[String] = None)
+    extends RepositoryOp[GHResponse[Release]]
+
+final case class GetCombinedStatus(owner: String,
+                                   repo: String,
+                                   ref: String,
+                                   accessToken: Option[String] = None)
+    extends RepositoryOp[GHResponse[CombinedStatus]]
+
+final case class ListStatuses(owner: String,
+                              repo: String,
+                              ref: String,
+                              accessToken: Option[String] = None)
+    extends RepositoryOp[GHResponse[List[Status]]]
+
+final case class CreateStatus(owner: String,
+                              repo: String,
+                              sha: String,
+                              state: String,
+                              target_url: Option[String],
+                              description: Option[String],
+                              context: Option[String],
+                              accessToken: Option[String] = None)
+    extends RepositoryOp[GHResponse[Status]]
+
+/**
+  * Exposes Repositories operations as a Free monadic algebra that may be combined with other Algebras via
+  * Coproduct
+  */
+class RepositoryOps[F[_]](implicit I: InjectK[RepositoryOp, F]) {
+
+  def getRepo(
     owner: String,
     repo: String,
     accessToken: Option[String] = None
-) extends RepositoryOp[GHResponse[Repository]]
+  ): Free[F, GHResponse[Repository]] =
+    Free.inject[RepositoryOp, F](GetRepo(owner, repo, accessToken))
 
-final case class ListOrgRepos(
+  def listOrgRepos(
     org: String,
     `type`: Option[String] = None,
     pagination: Option[Pagination] = None,
     accessToken: Option[String] = None
-) extends RepositoryOp[GHResponse[List[Repository]]]
+  ): Free[F, GHResponse[List[Repository]]] =
+    Free.inject[RepositoryOp, F](
+      ListOrgRepos(org, `type`, pagination, accessToken)
+    )
 
-final case class ListUserRepos(
+  def listUserRepos(
     user: String,
     `type`: Option[String] = None,
     pagination: Option[Pagination] = None,
     accessToken: Option[String] = None
-) extends RepositoryOp[GHResponse[List[Repository]]]
+  ): Free[F, GHResponse[List[Repository]]] =
+    Free.inject[RepositoryOp, F](
+      ListUserRepos(user, `type`, pagination, accessToken)
+    )
 
-final case class GetContents(
+  def getContents(
     owner: String,
     repo: String,
     path: String,
     ref: Option[String] = None,
     accessToken: Option[String] = None
-) extends RepositoryOp[GHResponse[NonEmptyList[Content]]]
+  ): Free[F, GHResponse[NonEmptyList[Content]]] =
+    Free.inject[RepositoryOp, F](
+      GetContents(owner, repo, path, ref, accessToken)
+    )
 
-final case class ListCommits(
+  def listCommits(
     owner: String,
     repo: String,
     sha: Option[String] = None,
@@ -65,30 +168,53 @@ final case class ListCommits(
     until: Option[String] = None,
     pagination: Option[Pagination] = None,
     accessToken: Option[String] = None
-) extends RepositoryOp[GHResponse[List[Commit]]]
+  ): Free[F, GHResponse[List[Commit]]] =
+    Free.inject[RepositoryOp, F](
+      ListCommits(
+        owner,
+        repo,
+        sha,
+        path,
+        author,
+        since,
+        until,
+        pagination,
+        accessToken
+      )
+    )
 
-final case class ListBranches(
+  def listBranches(
     owner: String,
     repo: String,
     `protected`: Option[Boolean] = None,
     accessToken: Option[String] = None
-) extends RepositoryOp[GHResponse[List[Branch]]]
+  ): Free[F, GHResponse[List[Branch]]] =
+    Free.inject[RepositoryOp, F](
+      ListBranches(owner, repo, `protected`, accessToken)
+    )
 
-final case class ListContributors(
+  def listContributors(
     owner: String,
     repo: String,
     anon: Option[String] = None,
-    accessToken: Option[String] = None
-) extends RepositoryOp[GHResponse[List[User]]]
+    accessToken: Option[String] = None,
+    pagination: Option[Pagination] = None
+  ): Free[F, GHResponse[List[User]]] =
+    Free.inject[RepositoryOp, F](
+      ListContributors(owner, repo, anon, accessToken, pagination)
+    )
 
-final case class ListCollaborators(
+  def listCollaborators(
     owner: String,
     repo: String,
     affiliation: Option[String] = None,
     accessToken: Option[String] = None
-) extends RepositoryOp[GHResponse[List[User]]]
+  ): Free[F, GHResponse[List[User]]] =
+    Free.inject[RepositoryOp, F](
+      ListCollaborators(owner, repo, affiliation, accessToken)
+    )
 
-final case class CreateRelease(
+  def createRelease(
     owner: String,
     repo: String,
     tagName: String,
@@ -98,120 +224,6 @@ final case class CreateRelease(
     draft: Option[Boolean] = None,
     prerelease: Option[Boolean] = None,
     accessToken: Option[String] = None
-) extends RepositoryOp[GHResponse[Release]]
-
-final case class GetCombinedStatus(
-    owner: String,
-    repo: String,
-    ref: String,
-    accessToken: Option[String] = None
-) extends RepositoryOp[GHResponse[CombinedStatus]]
-
-final case class ListStatuses(
-    owner: String,
-    repo: String,
-    ref: String,
-    accessToken: Option[String] = None
-) extends RepositoryOp[GHResponse[List[Status]]]
-
-final case class CreateStatus(
-    owner: String,
-    repo: String,
-    sha: String,
-    state: String,
-    target_url: Option[String],
-    description: Option[String],
-    context: Option[String],
-    accessToken: Option[String] = None
-) extends RepositoryOp[GHResponse[Status]]
-
-/**
- * Exposes Repositories operations as a Free monadic algebra that may be combined with other Algebras via
- * Coproduct
- */
-class RepositoryOps[F[_]](implicit I: InjectK[RepositoryOp, F]) {
-
-  def getRepo(
-      owner: String,
-      repo: String,
-      accessToken: Option[String] = None
-  ): Free[F, GHResponse[Repository]] =
-    Free.inject[RepositoryOp, F](GetRepo(owner, repo, accessToken))
-
-  def listOrgRepos(
-      org: String,
-      `type`: Option[String] = None,
-      pagination: Option[Pagination] = None,
-      accessToken: Option[String] = None
-  ): Free[F, GHResponse[List[Repository]]] =
-    Free.inject[RepositoryOp, F](ListOrgRepos(org, `type`, pagination, accessToken))
-
-  def listUserRepos(
-      user: String,
-      `type`: Option[String] = None,
-      pagination: Option[Pagination] = None,
-      accessToken: Option[String] = None
-  ): Free[F, GHResponse[List[Repository]]] =
-    Free.inject[RepositoryOp, F](ListUserRepos(user, `type`, pagination, accessToken))
-
-  def getContents(
-      owner: String,
-      repo: String,
-      path: String,
-      ref: Option[String] = None,
-      accessToken: Option[String] = None
-  ): Free[F, GHResponse[NonEmptyList[Content]]] =
-    Free.inject[RepositoryOp, F](GetContents(owner, repo, path, ref, accessToken))
-
-  def listCommits(
-      owner: String,
-      repo: String,
-      sha: Option[String] = None,
-      path: Option[String] = None,
-      author: Option[String] = None,
-      since: Option[String] = None,
-      until: Option[String] = None,
-      pagination: Option[Pagination] = None,
-      accessToken: Option[String] = None
-  ): Free[F, GHResponse[List[Commit]]] =
-    Free.inject[RepositoryOp, F](
-      ListCommits(owner, repo, sha, path, author, since, until, pagination, accessToken))
-
-  def listBranches(
-      owner: String,
-      repo: String,
-      `protected`: Option[Boolean] = None,
-      accessToken: Option[String] = None
-  ): Free[F, GHResponse[List[Branch]]] =
-    Free.inject[RepositoryOp, F](
-      ListBranches(owner, repo, `protected`, accessToken))
-
-  def listContributors(
-      owner: String,
-      repo: String,
-      anon: Option[String] = None,
-      accessToken: Option[String] = None
-  ): Free[F, GHResponse[List[User]]] =
-    Free.inject[RepositoryOp, F](ListContributors(owner, repo, anon, accessToken))
-
-  def listCollaborators(
-      owner: String,
-      repo: String,
-      affiliation: Option[String] = None,
-      accessToken: Option[String] = None
-  ): Free[F, GHResponse[List[User]]] =
-    Free.inject[RepositoryOp, F](ListCollaborators(owner, repo, affiliation, accessToken))
-
-  def createRelease(
-      owner: String,
-      repo: String,
-      tagName: String,
-      name: String,
-      body: String,
-      targetCommitish: Option[String] = None,
-      draft: Option[Boolean] = None,
-      prerelease: Option[Boolean] = None,
-      accessToken: Option[String] = None
   ): Free[F, GHResponse[Release]] =
     Free.inject[RepositoryOp, F](
       CreateRelease(
@@ -223,44 +235,60 @@ class RepositoryOps[F[_]](implicit I: InjectK[RepositoryOp, F]) {
         targetCommitish,
         draft,
         prerelease,
-        accessToken))
+        accessToken
+      )
+    )
 
   def getCombinedStatus(
-      owner: String,
-      repo: String,
-      ref: String,
-      accessToken: Option[String] = None
+    owner: String,
+    repo: String,
+    ref: String,
+    accessToken: Option[String] = None
   ): Free[F, GHResponse[CombinedStatus]] =
-    Free.inject[RepositoryOp, F](GetCombinedStatus(owner, repo, ref, accessToken))
+    Free.inject[RepositoryOp, F](
+      GetCombinedStatus(owner, repo, ref, accessToken)
+    )
 
   def listStatuses(
-      owner: String,
-      repo: String,
-      ref: String,
-      accessToken: Option[String] = None
+    owner: String,
+    repo: String,
+    ref: String,
+    accessToken: Option[String] = None
   ): Free[F, GHResponse[List[Status]]] =
     Free.inject[RepositoryOp, F](ListStatuses(owner, repo, ref, accessToken))
 
   def createStatus(
-      owner: String,
-      repo: String,
-      sha: String,
-      state: String,
-      target_url: Option[String],
-      description: Option[String],
-      context: Option[String],
-      accessToken: Option[String] = None
+    owner: String,
+    repo: String,
+    sha: String,
+    state: String,
+    target_url: Option[String],
+    description: Option[String],
+    context: Option[String],
+    accessToken: Option[String] = None
   ): Free[F, GHResponse[Status]] =
     Free.inject[RepositoryOp, F](
-      CreateStatus(owner, repo, sha, state, target_url, description, context, accessToken))
+      CreateStatus(
+        owner,
+        repo,
+        sha,
+        state,
+        target_url,
+        description,
+        context,
+        accessToken
+      )
+    )
 }
 
 /**
- * Default implicit based DI factory from which instances of the RepositoryOps may be obtained
- */
+  * Default implicit based DI factory from which instances of the RepositoryOps may be obtained
+  */
 object RepositoryOps {
 
-  implicit def instance[F[_]](implicit I: InjectK[RepositoryOp, F]): RepositoryOps[F] =
+  implicit def instance[F[_]](
+    implicit I: InjectK[RepositoryOp, F]
+  ): RepositoryOps[F] =
     new RepositoryOps[F]
 
 }
